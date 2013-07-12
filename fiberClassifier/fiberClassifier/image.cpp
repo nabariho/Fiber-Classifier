@@ -23,6 +23,11 @@ Image::Image(String file_path)
   }
 }
 
+Image::Image(const Image& image)
+{
+	path = image.path;
+	image.opencv_mat.copyTo(opencv_mat);
+}
 
 Image::~Image(void)
 {
@@ -58,4 +63,10 @@ void Image::automatic_threshold_detector(Image* dest)
 	  adaptiveThreshold(opencv_mat, dest->opencv_mat,255,CV_ADAPTIVE_THRESH_MEAN_C,CV_THRESH_BINARY,3,5 );
 	}
 
+}
+ 
+void Image::operator= (Image img)
+{
+	path = img.path;
+	img.opencv_mat.copyTo(opencv_mat);
 }
