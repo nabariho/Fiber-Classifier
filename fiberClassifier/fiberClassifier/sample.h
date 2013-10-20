@@ -1,6 +1,7 @@
 #pragma once
 #include "image.h"
 
+
 class Sample
 {
 	Image images[3];
@@ -12,7 +13,6 @@ public:
 
 	void display(void);
 	//It align the three images using warpAffine
-	void images_align();
-
+	void align();
 };
 
