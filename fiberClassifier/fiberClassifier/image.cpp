@@ -19,6 +19,8 @@ Image::Image(String file_path)
 	cvtColor(opencv_mat,opencv_mat,CV_BGR2GRAY);
 	//reduce noise
 	blur(opencv_mat,opencv_mat,Size(3,3));
+	equalizeHist(opencv_mat,opencv_mat);
+
   }catch(const char* msg){
 	  cerr << "File can't be open" << endl;
   }
@@ -41,12 +43,15 @@ Image::~Image(void)
 string Image::get_path(){
 	return path;
 }
+void Image::set_path(string new_path){
+	path = new_path;
+}
 
 void Image::display()
 {
 	if(opencv_mat.data)
 	{
-		namedWindow( path,NULL);// Create a window for display.
+	  namedWindow( path,CV_WINDOW_NORMAL);// Create a window for display.
 	  imshow( path, opencv_mat);
 	}
 }
@@ -75,8 +80,10 @@ void Image::automatic_threshold_detector(Image* dest)
 }
 
 void Image::threshold_detector(Image* dest, int threshold_type,int threshold_value){
+	Mat aux;
 	dest ->opencv_mat.create(opencv_mat.size(),opencv_mat.type());
-	threshold(opencv_mat, dest->opencv_mat,threshold_value,MAX_BINARY_VALUE,threshold_type);
+	equalizeHist(opencv_mat,aux);
+	threshold(aux, dest->opencv_mat,threshold_value,MAX_BINARY_VALUE,threshold_type);
 }
 
 void Image::get_contours(Image* dest){
@@ -111,14 +118,25 @@ void Image::operator= (Image img)
 
 Image Image::get_black(){
 	Image black;
+	black.set_path("negras");
 	threshold_detector(&black, BINARY_THRESHOLD,BLACK_THRESHOLD);
 	return black;
-
 }
 Image Image::get_white(){
-    Image white, inv;
-	//bitwise_not(opencv_mat,inv.opencv_mat);
-	threshold_detector(&white, INV_BINARY_THRESHOLD,WHITE_THRESHOLD);
+    Image white, black,all;
+	Mat aux;
+	white.set_path("blancas");
+	black.set_path("negras");
+	all.set_path("all");
+
+	threshold_detector(&black,BINARY_THRESHOLD,BLACK_THRESHOLD);
+	threshold_detector(&all, BINARY_THRESHOLD,WHITE_THRESHOLD);
+	//bitwise_or(all.image_mat(),black.image_mat(),aux);
+	absdiff(all.image_mat(),black.image_mat(),aux);
+	bitwise_not(aux,aux);
+	//equalizeHist(aux,aux);
+	white.update_image(aux);
+
 	return white;
 }
 

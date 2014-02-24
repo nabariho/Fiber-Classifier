@@ -13,7 +13,7 @@ class Image
 {
   String path;
   Mat opencv_mat;
-  
+  int threshold_value;
   public:
 
 	Image();
@@ -30,6 +30,7 @@ class Image
 	void display_off();
 
 	string get_path();
+	void set_path(string path);
 
 	//egdes detection in image by canny method
 	void canny_edge_detector(Image* dest);

@@ -4,8 +4,8 @@
 
 class Sample
 {
-	Image images[3];
 public:
+	Image images[3];
 	Sample(void);
 	//It initializes the images' vector with the images passed as parameters
 	Sample(String path_a, String path_b, String path_c);

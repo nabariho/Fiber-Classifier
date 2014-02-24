@@ -38,7 +38,7 @@ void my_mouse_callback( int event, int x, int y, int flags, void* param )
     case CV_EVENT_LBUTTONDOWN:
         puntosOrig[i_orig].x = x;
         puntosOrig[i_orig].y = y;
-        circle(img1, puntosOrig[i_orig], 3, Scalar(255, 255, 255), 1, 8, 0);
+		circle(img1, puntosOrig[i_orig], 8, Scalar(255, 0, 0), -1, CV_AA, 0);
 	    imshow(window_name_1, img1);
 	    cout << "Click en: " << puntosOrig[i_orig] << endl;
         i_orig++;
@@ -59,7 +59,7 @@ void my_mouse_callback2( int event, int x, int y, int flags, void* param )
 
         puntosModif[i_modif].x = x;
         puntosModif[i_modif].y = y;
-        cv::circle(img2, puntosModif[i_modif], 3, cv::Scalar(255, 255, 255), 1, 8, 0);
+        cv::circle(img2, puntosModif[i_modif], 8, cv::Scalar(255, 0, 0), -1, CV_AA, 0);
 	    cv::imshow(window_name_2, img2);
 	    cv::waitKey(10);
 	
@@ -143,6 +143,7 @@ void Sample::align()
 	matrizTransf = getAffineTransform(puntosModif,puntosOrig);
 	warpAffine(images[2].image_mat(), nueva, matrizTransf, img2.size());
 	images[2].update_image(nueva);
-    
+	images[2].display_off();
+	images[0].display_off();
 }
 

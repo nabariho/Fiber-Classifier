@@ -5,11 +5,14 @@
 #define INV_BINARY_THRESHOLD 1
 
 //valores umbrales para la clasificación de las distintas fibras
-#define BLACK_THRESHOLD 103
+#define BLACK_THRESHOLD 30
 #define Fiber2_threshold 185
-#define WHITE_THRESHOLD 189
+#define WHITE_THRESHOLD 93
 
 
+#define BLACK_THRESHOLD_IMAGE1 160
+#define	BLACK_THRESHOLD_IMAGE2 101
+#define BLACK_THRESHOLD_IMAGE3 190
 // Implement mouse callback
 
 
