@@ -10,11 +10,12 @@ Image::Image()
   opencv_mat = NULL;
 }
 //constructor by  path
-Image::Image(String file_path)
+Image::Image(String file_path, int threshold)
 {
   try{
 	path = file_path;
 	opencv_mat = imread(path);
+	threshold_value = threshold;
 	//We always work with gray images
 	cvtColor(opencv_mat,opencv_mat,CV_BGR2GRAY);
 	//reduce noise
@@ -30,6 +31,7 @@ Image::Image(const Image& image)
 {
 	path = image.path;
 	image.opencv_mat.copyTo(opencv_mat);
+	threshold_value = image.threshold_value;
 }
 
 Image::~Image(void)
@@ -39,7 +41,9 @@ Image::~Image(void)
 
 }
 
-
+void Image::set_threshold_value(int threshold){
+	threshold_value = threshold;
+}
 string Image::get_path(){
 	return path;
 }
@@ -79,11 +83,12 @@ void Image::automatic_threshold_detector(Image* dest)
 
 }
 
-void Image::threshold_detector(Image* dest, int threshold_type,int threshold_value){
+void Image::threshold_detector(Image* dest, int threshold_type){
 	Mat aux;
 	dest ->opencv_mat.create(opencv_mat.size(),opencv_mat.type());
 	equalizeHist(opencv_mat,aux);
-	threshold(aux, dest->opencv_mat,threshold_value,MAX_BINARY_VALUE,threshold_type);
+	//threshold( src_gray, dst, threshold_value, max_BINARY_value,threshold_type );
+	threshold(aux, dest->opencv_mat, threshold_value,MAX_BINARY_VALUE,threshold_type);
 }
 
 void Image::get_contours(Image* dest){
@@ -114,12 +119,13 @@ void Image::operator= (Image img)
 {
 	path = img.path;
 	img.opencv_mat.copyTo(opencv_mat);
+	threshold_value = img.threshold_value;
 }
 
 Image Image::get_black(){
 	Image black;
 	black.set_path("negras");
-	threshold_detector(&black, BINARY_THRESHOLD,BLACK_THRESHOLD);
+	threshold_detector(&black, BINARY_THRESHOLD);
 	return black;
 }
 Image Image::get_white(){
@@ -129,13 +135,13 @@ Image Image::get_white(){
 	black.set_path("negras");
 	all.set_path("all");
 
-	threshold_detector(&black,BINARY_THRESHOLD,BLACK_THRESHOLD);
-	threshold_detector(&all, BINARY_THRESHOLD,WHITE_THRESHOLD);
-	//bitwise_or(all.image_mat(),black.image_mat(),aux);
-	absdiff(all.image_mat(),black.image_mat(),aux);
-	bitwise_not(aux,aux);
-	//equalizeHist(aux,aux);
-	white.update_image(aux);
+	//threshold_detector(&black,BINARY_THRESHOLD,BLACK_THRESHOLD);
+	//threshold_detector(&all, BINARY_THRESHOLD,WHITE_THRESHOLD);
+	////bitwise_or(all.image_mat(),black.image_mat(),aux);
+	//absdiff(all.image_mat(),black.image_mat(),aux);
+	//bitwise_not(aux,aux);
+	////equalizeHist(aux,aux);
+	//white.update_image(aux);
 
 	return white;
 }

@@ -80,12 +80,12 @@ Sample::Sample(void)
 {
 }
 
-Sample::Sample(String path_a, String path_b, String path_c)
+Sample::Sample(String path_a, String path_b, String path_c,int threshold1, int threshold2, int threshold3)
 {
 	
-	images[0] = Image(path_a);
-	images[1] = Image(path_b);
-	images[2] = Image(path_c);
+	images[0] = Image(path_a,threshold1);
+	images[1] = Image(path_b, threshold2);
+	images[2] = Image(path_c,threshold3);
 }
 
 Sample::~Sample(void)
