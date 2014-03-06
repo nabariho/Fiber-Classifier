@@ -91,12 +91,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	namedWindow( "combined",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "combined", channel);
 
-	Image combined,contours;
-	combined.update_image(channel);
-	combined.set_path("image_combined");
+	//Image combined,contours;
+	//combined.update_image(channel);
+	//combined.set_path("image_combined");
 
-	combined.get_contours(&contours);
-	contours.display();
+	//combined.get_contours(&contours);
+	//contours.display();
     waitKey();
     return 0;
 
