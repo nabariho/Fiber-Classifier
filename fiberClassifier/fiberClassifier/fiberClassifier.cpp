@@ -1,85 +1,69 @@
 
 #include "stdafx.h"
-#include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
-#include <stdlib.h>
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
 
 using namespace cv;
+using namespace std;
 
-/// Global variables
+Mat src; Mat src_gray;
+int thresh = 100;
+int max_thresh = 255;
+RNG rng(12345);
 
-int threshold_value = 0;
-int threshold_type = 3;;
-int const max_value = 255;
-int const max_type = 4;
-int const max_BINARY_value = 255;
+/// Function header
+void thresh_callback(int, void* );
 
-Mat src, src_gray, dst;
-char* window_name = "Threshold Demo";
-
-char* trackbar_type = "Type: \n 0: Binary \n 1: Binary Inverted \n 2: Truncate \n 3: To Zero \n 4: To Zero Inverted";
-char* trackbar_value = "Value";
-
-/// Function headers
-void Threshold_Demo( int, void* );
-
-/**
- * @function main
- */
+/** @function main */
 int main( int argc, char** argv )
 {
+  /// Load source image and convert it to gray
+  String file1 = "C:/Users/nabar/Documents/GitHub/Fiber-Classifier/fiberClassifier/images/4_3_1.tif";
+  String file2 = "C:/Users/nabar/Documents/GitHub/Fiber-Classifier/fiberClassifier/images/4_50_1.tif";
+  String file3 = "C:/Users/nabar/Documents/GitHub/Fiber-Classifier/fiberClassifier/images/10_3_1.tif";
+  src = imread(file2);
 
-	String file1 = "C:/Users/nabar/Documents/GitHub/Fiber-Classifier/fiberClassifier/images/4_3_1.tif";
-	String file2 = "C:/Users/nabar/Documents/GitHub/Fiber-Classifier/fiberClassifier/images/4_50_1.tif";
-	String file3 = "C:/Users/nabar/Documents/GitHub/Fiber-Classifier/fiberClassifier/images/10_3_1.tif";
-  /// Load an image
-  src = imread( file2, 1 );
+  /// Convert image to gray and blur it
+  cvtColor( src, src_gray, CV_BGR2GRAY );
+  blur( src_gray, src_gray, Size(3,3) );
 
-  /// Convert the image to Gray
-  cvtColor( src, src_gray, CV_RGB2GRAY );
-  equalizeHist(src_gray,src_gray);
-  /// Create a window to display results
-  namedWindow( window_name, CV_WINDOW_AUTOSIZE );
+  /// Create Window
+  char* source_window = "Source";
+  namedWindow( source_window, CV_WINDOW_AUTOSIZE );
+  imshow( source_window, src );
 
-  /// Create Trackbar to choose type of Threshold
-  createTrackbar( trackbar_type,
-                  window_name, &threshold_type,
-                  max_type, Threshold_Demo );
+  createTrackbar( " Canny thresh:", "Source", &thresh, max_thresh, thresh_callback );
+  thresh_callback( 0, 0 );
 
-  createTrackbar( trackbar_value,
-                  window_name, &threshold_value,
-                  max_value, Threshold_Demo );
-
-  /// Call the function to initialize
-  Threshold_Demo( 0, 0 );
-
-  /// Wait until user finishes program
-  while(true)
-  {
-    int c;
-    c = waitKey( 20 );
-    if( (char)c == 27 )
-      { break; }
-   }
-
+  waitKey(0);
+  return(0);
 }
 
-
-/**
- * @function Threshold_Demo
- */
-void Threshold_Demo( int, void* )
+/** @function thresh_callback */
+void thresh_callback(int, void* )
 {
-  /* 0: Binary
-     1: Binary Inverted
-     2: Threshold Truncated
-     3: Threshold to Zero
-     4: Threshold to Zero Inverted
-   */
+  Mat canny_output;
+  vector<vector<Point> > contours;
+  vector<Vec4i> hierarchy;
 
-  threshold( src_gray, dst, threshold_value, max_BINARY_value,threshold_type );
+  /// Detect edges using canny
+  Canny( src_gray, canny_output, thresh, thresh*2, 3 );
+  /// Find contours
+  findContours( canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
-  imshow( window_name, dst );
+  /// Draw contours
+  Mat drawing = Mat::zeros( canny_output.size(), CV_8UC3 );
+  for( int i = 0; i< contours.size(); i++ )
+     {
+       Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+       drawContours( drawing, contours, i, color, 2, 8, hierarchy, 0, Point() );
+     }
+
+  /// Show in a window
+  namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
+  imshow( "Contours", drawing );
 }
 
