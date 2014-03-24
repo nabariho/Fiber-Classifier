@@ -28,6 +28,7 @@ Mat getContourFromBinary(Mat canny_output)
 
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
+	Canny( canny_output, canny_output, 100, 100*3, 3 );
 
 	findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 	Mat drawing = Mat::zeros(canny_output.size(), CV_8UC3 );
