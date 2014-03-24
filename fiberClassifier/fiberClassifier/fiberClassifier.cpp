@@ -21,19 +21,23 @@ Mat getContours(string File1, int cannyThreshold){
 	/// Convert image to gray and blur it
 	cvtColor( src, blurMat, CV_BGR2GRAY );
 	blur( blurMat, blurMat, Size(3,3) );
+	equalizeHist(blurMat,blurMat);
 
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
 
-	Canny( blurMat, canny_output, cannyThreshold, cannyThreshold*2, 3 );
-	findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
-	Mat drawing = Mat::zeros(blurMat.size(), CV_8UC3 );
+	Canny( blurMat, canny_output, cannyThreshold, cannyThreshold*3, 3 );
+	//bitwise_not(canny_output,canny_output);
+	//findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+	//Mat drawing = Mat::zeros(blurMat.size(), CV_8UC3 );
 
-	for( int i = 0; i< contours.size(); i++ )
-     {
-		drawContours( drawing, contours, i, 255, CV_FILLED, 8, hierarchy, 0, Point() );
-     }
-	return drawing;
+	//for( int i = 0; i< contours.size(); i++ )
+ //    {
+	//	drawContours( drawing, contours, i, 255, CV_FILLED, 8, hierarchy, 0, Point() );
+ //    }
+	//return drawing;
+	bitwise_not(canny_output, canny_output);
+	return canny_output;
 }
 
 Mat getContourFromBinary(Mat canny_output)
@@ -117,8 +121,12 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	Mat contourType1, contourType2, contourType3;
 
-	namedWindow( "Contornos",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Contornos", contourOriginal);
+	namedWindow( "Contornos1",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Contornos1", contourOriginal1);
+	namedWindow( "Contornos2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Contornos2", contourOriginal2);
+	namedWindow( "Contornos3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Contornos3", contourOriginal3);
 
 	contourType1 = getContourFromBinary(type1);
 	namedWindow( "Contornos Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
