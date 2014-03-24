@@ -21,6 +21,24 @@ int ratio = 3;
 int kernel_size = 3;
 char* window_name = "Edge Map";
 
+
+
+Mat getContourFromBinary(Mat canny_output)
+{
+
+	vector<vector<Point> > contours;
+	vector<Vec4i> hierarchy;
+
+	findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+	Mat drawing = Mat::zeros(canny_output.size(), CV_8UC3 );
+
+	for( int i = 0; i< contours.size(); i++ )
+     {
+		drawContours( drawing, contours, i, 255, CV_FILLED, 8, hierarchy, 0, Point() );
+     }
+	return drawing;
+}
+
 /**
  * @function CannyThreshold
  * @brief Trackbar callback - Canny thresholds input with a ratio 1:3
@@ -41,6 +59,13 @@ void CannyThreshold(int, void*)
   imshow( window_name, dst );
   bitwise_not(inv,inv);
   imshow("inverse",inv);
+
+  Mat invContours;
+  invContours.create( src.size(), src.type() );
+
+  invContours = getContourFromBinary(inv);
+  namedWindow("contours", CV_WINDOW_NORMAL);
+  imshow ("contours", invContours);
  }
 
 /** @function main */
