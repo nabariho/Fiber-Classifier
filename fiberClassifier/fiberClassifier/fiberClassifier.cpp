@@ -14,7 +14,7 @@
 using namespace cv;
 using namespace std;
 
-Mat getContours(string File1){
+Mat getContours(string File1, int cannyThreshold){
 	Mat src,blurMat,canny_output;
 	src = imread( File1);
 
@@ -25,7 +25,7 @@ Mat getContours(string File1){
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
 
-	Canny( blurMat, canny_output, 100, 100*2, 3 );
+	Canny( blurMat, canny_output, cannyThreshold, cannyThreshold*2, 3 );
 	findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 	Mat drawing = Mat::zeros(blurMat.size(), CV_8UC3 );
 
@@ -111,7 +111,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	imshow( "combined", channel);
 
   /// Show in a window
-	Mat contourOriginal = getContours(file1);
+	Mat contourOriginal1 = getContours(file1, CANNY_THRESHOLD_IMAGE1);
+	Mat contourOriginal2 = getContours(file2, CANNY_THRESHOLD_IMAGE2);
+	Mat contourOriginal3 = getContours(file3, CANNY_THRESHOLD_IMAGE3);
+
 	Mat contourType1, contourType2, contourType3;
 
 	namedWindow( "Contornos",CV_WINDOW_NORMAL);// Create a window for display.
