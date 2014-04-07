@@ -49,7 +49,7 @@ Mat CannyThreshold(Mat src, int, void*)
  inv.create( src.size(), src.type() );
 
   /// Canny detector
- Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size );
+ Canny( src, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size );
 
   /// Using Canny's output as a mask, we display our result
   dst = Scalar::all(0);
