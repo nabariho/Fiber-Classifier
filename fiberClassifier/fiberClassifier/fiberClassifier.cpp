@@ -40,7 +40,7 @@ char* window_name = "Edge Map";
  * @function CannyThreshold
  * @brief Trackbar callback - Canny thresholds input with a ratio 1:3
  */
-Mat CannyThreshold(Mat src, int, void*)
+Mat CannyThreshold(string file, int, void*)
 {
  
  Mat src_gray;
@@ -58,7 +58,7 @@ Mat CannyThreshold(Mat src, int, void*)
   blur(inv,inv, Size(3,3));
   bitwise_not(inv,inv);
   namedWindow( "canny",CV_WINDOW_NORMAL);// Create a window for display.
-  imshow( "canny", detected_edges);	
+  imshow( "canny", dst);	
   return inv;
  }
 
