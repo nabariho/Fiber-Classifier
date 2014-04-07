@@ -68,7 +68,9 @@ void CannyThreshold(int, void*)
   channels[2] = inv;
 
   Mat channel;
-  merge(channels,channel);
+  merge(channels,3,channel);
+  equalizeHist(channel,channel);
+  imshow("eq",channel);
 
 
 
