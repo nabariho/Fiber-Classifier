@@ -49,7 +49,14 @@ Mat CannyThreshold(string file, int, void*)
  inv.create( src.size(), src.type() );
 
   /// Canny detector
- Canny( src, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size );
+	src = imread(file);
+
+	cvtColor( src, src_gray, CV_BGR2GRAY );
+
+	blur( src_gray, detected_edges, Size(3,3) );
+	equalizeHist(detected_edges,detected_edges);
+
+  Canny( detected_edges, detected_edges, 0, 0*ratio, kernel_size );
 
   /// Using Canny's output as a mask, we display our result
   dst = Scalar::all(0);
@@ -82,7 +89,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	Mat blackImage1, blackImage2,blackImage3;
 
-	blackImage1 = CannyThreshold(my_sample.images[0].image_mat(), 0, 0);
+	blackImage1 = CannyThreshold(file1, 0, 0);
 	//blackImage2 = CannyThreshold(my_sample.images[1].image_mat(), 0, 0);
 	//blackImage3 = CannyThreshold(my_sample.images[2].image_mat(), 0, 0);
 
