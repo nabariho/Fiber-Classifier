@@ -35,7 +35,7 @@ Mat getContourFromBinary(Mat canny_output)
 
 	for( int i = 0; i< contours.size(); i++ )
      {
-		drawContours( drawing, contours, i, 255, CV_FILLED, 8, hierarchy, 0, Point() );
+			drawContours( drawing, contours, i, 255, 0, 8, hierarchy, 0, Point() );
      }
 	return drawing;
 }
@@ -56,17 +56,32 @@ void CannyThreshold(int, void*)
   /// Using Canny's output as a mask, we display our result
   dst = Scalar::all(0);
   src.copyTo( dst, detected_edges);
-  src.copyTo(inv, dst);
-  imshow( window_name, dst );
+  src.copyTo(inv, detected_edges);
+  blur(inv,inv, Size(3,3));
   bitwise_not(inv,inv);
+  imshow( window_name, dst );
   imshow("inverse",inv);
 
-  Mat invContours;
-  invContours.create( src.size(), src.type() );
+  Mat channels[3];
+  channels[0] = inv;
+  channels[1] = inv;
+  channels[2] = inv;
 
-  invContours = getContourFromBinary(inv);
-  namedWindow("contours", CV_WINDOW_NORMAL);
-  imshow ("contours", invContours);
+  Mat channel;
+  merge(channels,channel);
+
+
+
+
+
+  //Mat invContours;
+  //invContours.create( src.size(), src.type() );
+
+  //invContours = getContourFromBinary(inv);
+  //threshold(invContours, invContours, 0, 255, CV_THRESH_BINARY);
+
+  //namedWindow("contours", CV_WINDOW_NORMAL);
+  //imshow ("contours", invContours);
  }
 
 /** @function main */
@@ -91,6 +106,7 @@ int main( int argc, char** argv )
   /// Create a window
   namedWindow( window_name, CV_WINDOW_NORMAL );
   namedWindow("inverse", CV_WINDOW_NORMAL);
+  namedWindow("eq", CV_WINDOW_NORMAL);
 
   /// Create a Trackbar for user to enter threshold
   createTrackbar( "Min Threshold:", window_name, &lowThreshold, max_lowThreshold, CannyThreshold );
