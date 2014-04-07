@@ -51,7 +51,7 @@ void CannyThreshold(int, void*)
   equalizeHist(detected_edges,detected_edges);
 
   /// Canny detector
-  Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size );
+  Canny( detected_edges, detected_edges, 0, 0*ratio, kernel_size );
 
   /// Using Canny's output as a mask, we display our result
   dst = Scalar::all(0);
@@ -62,28 +62,6 @@ void CannyThreshold(int, void*)
   imshow( window_name, dst );
   imshow("inverse",inv);
 
-  Mat channels[3];
-  channels[0] = inv;
-  channels[1] = inv;
-  channels[2] = inv;
-
-  Mat channel;
-  merge(channels,3,channel);
-  equalizeHist(channel,channel);
-  imshow("eq",channel);
-
-
-
-
-
-  //Mat invContours;
-  //invContours.create( src.size(), src.type() );
-
-  //invContours = getContourFromBinary(inv);
-  //threshold(invContours, invContours, 0, 255, CV_THRESH_BINARY);
-
-  //namedWindow("contours", CV_WINDOW_NORMAL);
-  //imshow ("contours", invContours);
  }
 
 /** @function main */
