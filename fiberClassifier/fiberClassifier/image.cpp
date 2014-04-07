@@ -17,6 +17,7 @@ Image::Image(String file_path, int threshold)
 	opencv_mat = imread(path);
 	threshold_value = threshold;
 	//We always work with gray images
+
 	cvtColor(opencv_mat,opencv_mat,CV_BGR2GRAY);
 	//reduce noise
 	blur(opencv_mat,opencv_mat,Size(3,3));

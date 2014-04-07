@@ -48,11 +48,6 @@ Mat CannyThreshold(Mat src, int, void*)
  dst.create( src.size(), src.type() );
  inv.create( src.size(), src.type() );
 
-	
- /// Reduce noise with a kernel 3x3
-  blur( src_gray, detected_edges, Size(3,3) );
-  equalizeHist(detected_edges,detected_edges);
-
   /// Canny detector
  Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size );
 
@@ -62,7 +57,8 @@ Mat CannyThreshold(Mat src, int, void*)
   src.copyTo(inv, detected_edges);
   blur(inv,inv, Size(3,3));
   bitwise_not(inv,inv);
-
+  namedWindow( "canny",CV_WINDOW_NORMAL);// Create a window for display.
+  imshow( "canny", detected_edges);	
   return inv;
  }
 
