@@ -81,14 +81,14 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 	Sample my_sample(file1,file2,file3,BLACK_THRESHOLD_IMAGE1,BLACK_THRESHOLD_IMAGE2,BLACK_THRESHOLD_IMAGE3);
-	my_sample.align(); //Queda pendiente tratar el alineamiento
+	//my_sample.align(); //Queda pendiente tratar el alineamiento
 	Mat channels[3],channel;
 	
 	Mat blackImage1, blackImage2,blackImage3;
 
 	blackImage1 = CannyThreshold(my_sample.images[0].image_mat(), 0, 0);
-	blackImage2 = CannyThreshold(my_sample.images[1].image_mat(), 0, 0);
-	blackImage3 = CannyThreshold(my_sample.images[2].image_mat(), 0, 0);
+	//blackImage2 = CannyThreshold(my_sample.images[1].image_mat(), 0, 0);
+	//blackImage3 = CannyThreshold(my_sample.images[2].image_mat(), 0, 0);
 
 
 
@@ -101,10 +101,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	namedWindow( "Negras1",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "Negras1", blackImage1);	
-	namedWindow( "Negras2",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Negras2", blackImage2);	
-	namedWindow( "Negras3",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Negras3", blackImage3);	
+	//namedWindow( "Negras2",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "Negras2", blackImage2);	
+	//namedWindow( "Negras3",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "Negras3", blackImage3);	
 
 
 
