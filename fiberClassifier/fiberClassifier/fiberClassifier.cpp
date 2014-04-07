@@ -20,6 +20,7 @@ using namespace std;
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include "Utils.h"
 
 
 
@@ -43,13 +44,14 @@ char* window_name = "Edge Map";
 Mat CannyThreshold(string file, int, void*)
 {
  
- Mat src_gray;
+ Mat src,src_gray;
+ src = imread(file);
+
  Mat dst, detected_edges, inv;
  dst.create( src.size(), src.type() );
  inv.create( src.size(), src.type() );
 
   /// Canny detector
-	src = imread(file);
 
 	cvtColor( src, src_gray, CV_BGR2GRAY );
 
@@ -64,8 +66,6 @@ Mat CannyThreshold(string file, int, void*)
   src.copyTo(inv, detected_edges);
   blur(inv,inv, Size(3,3));
   bitwise_not(inv,inv);
-  namedWindow( "canny",CV_WINDOW_NORMAL);// Create a window for display.
-  imshow( "canny", dst);	
   return inv;
  }
 
@@ -90,8 +90,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	Mat blackImage1, blackImage2,blackImage3;
 
 	blackImage1 = CannyThreshold(file1, 0, 0);
-	//blackImage2 = CannyThreshold(my_sample.images[1].image_mat(), 0, 0);
-	//blackImage3 = CannyThreshold(my_sample.images[2].image_mat(), 0, 0);
+	blackImage2 = CannyThreshold(file2, 0, 0);
+	blackImage3 = CannyThreshold(file3, 0, 0);
+
+	threshold( blackImage1, blackImage1, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
+	threshold( blackImage2, blackImage2, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
+	threshold( blackImage3, blackImage3, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
 
 
 
@@ -104,41 +108,41 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	namedWindow( "Negras1",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "Negras1", blackImage1);	
-	//namedWindow( "Negras2",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Negras2", blackImage2);	
-	//namedWindow( "Negras3",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Negras3", blackImage3);	
+	namedWindow( "Negras2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Negras2", blackImage2);	
+	namedWindow( "Negras3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Negras3", blackImage3);	
 
 
 
-	////Fibras tipo 1 (1, 1, 0)
-	//bitwise_and(invBlackImage1,invBlackImage2,type1);
-	//bitwise_and(blackImage3,type1,type1);
+	//Fibras tipo 1 (1, 1, 0)
+	bitwise_and(invBlackImage1,invBlackImage2,type1);
+	bitwise_and(blackImage3,type1,type1);
 
-	//namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo1", type1);
+	namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo1", type1);
 
-	////Fibras tipo 2 (1, 0, 1)
-	//bitwise_and(invBlackImage1, blackImage2, type2);
-	//bitwise_and(type2, invBlackImage3, type2);
+	//Fibras tipo 2 (1, 0, 1)
+	bitwise_and(invBlackImage1, blackImage2, type2);
+	bitwise_and(type2, invBlackImage3, type2);
 
-	//namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo2", type2);
+	namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo2", type2);
 
-	////Fibras tipo 3 (0, 1, 1)
-	//bitwise_and(blackImage1, invBlackImage2, type3);
-	//bitwise_and(type3,invBlackImage3,type3);
+	//Fibras tipo 3 (0, 1, 1)
+	bitwise_and(blackImage1, invBlackImage2, type3);
+	bitwise_and(type3,invBlackImage3,type3);
 
-	//namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo3", type3);
+	namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo3", type3);
 
 
-	//channels[0] = type1;
-	//channels[1] = type2;
-	//channels[2] = type3;
-	//merge(channels, 3, channel);
-	//namedWindow( "combined",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "combined", channel);
+	channels[0] = type1;
+	channels[1] = type2;
+	channels[2] = type3;
+	merge(channels, 3, channel);
+	namedWindow( "combined",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "combined", channel);
 
     waitKey();
     return 0;
