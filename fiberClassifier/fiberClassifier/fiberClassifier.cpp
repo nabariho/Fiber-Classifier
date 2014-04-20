@@ -38,11 +38,17 @@ char* window_name = "Edge Map";
 
 
 
-Mat getContourFromBinary(Mat canny_output)
+Mat getContourFromBinary(Mat canny_input)
 {
+
+	Mat src,blurMat,canny_output;
+
+	/// Convert image to gray and blur it
 
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
+
+	Canny( canny_input, canny_output, 0, 0*3, 3 );
 
 	findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 	Mat drawing = Mat::zeros(canny_output.size(), CV_8UC3 );
@@ -113,55 +119,61 @@ int _tmain(int argc, _TCHAR* argv[])
 	threshold( blackImage2, blackImage2, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
 	threshold( blackImage3, blackImage3, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
 
-	namedWindow( "Negras1",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Negras1", blackImage1);	
-
-	//blackImage1 = getContourFromBinary(blackImage1);
-	//blackImage2 = getContourFromBinary(blackImage2);
-	//blackImage3 = getContourFromBinary(blackImage3);
 
 
 	Mat invBlackImage1, invBlackImage2, invBlackImage3;
 	Mat type1, type2, type3;
 
-	//bitwise_not(blackImage1,invBlackImage1);
-	//bitwise_not(blackImage2,invBlackImage2);
-	//bitwise_not(blackImage3,invBlackImage3);
+	bitwise_not(blackImage1,invBlackImage1);
+	bitwise_not(blackImage2,invBlackImage2);
+	bitwise_not(blackImage3,invBlackImage3);
 
 	namedWindow( "Negras1",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "Negras1", blackImage1);	
-	//namedWindow( "Negras2",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Negras2", blackImage2);	
-	//namedWindow( "Negras3",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Negras3", blackImage3);	
+	namedWindow( "Negras2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Negras2", blackImage2);	
+	namedWindow( "Negras3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Negras3", blackImage3);	
 
 
 
-	////Fibras tipo 1 (1, 1, 0)
-	//bitwise_and(invBlackImage1,invBlackImage2,type1);
-	//bitwise_and(blackImage3,type1,type1);
+	//Fibras tipo 1 (1, 1, 0)
+	bitwise_and(invBlackImage1,invBlackImage2,type1);
+	bitwise_and(blackImage3,type1,type1);
 
-	//namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo1", type1);
+	namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo1", type1);
 
-	////Fibras tipo 2 (1, 0, 1)
-	//bitwise_and(invBlackImage1, blackImage2, type2);
-	//bitwise_and(type2, invBlackImage3, type2);
+	//Fibras tipo 2 (1, 0, 1)
+	bitwise_and(invBlackImage1, blackImage2, type2);
+	bitwise_and(type2, invBlackImage3, type2);
 
-	//namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo2", type2);
+	namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo2", type2);
 
-	////Fibras tipo 3 (0, 1, 1)
-	//bitwise_and(blackImage1, invBlackImage2, type3);
-	//bitwise_and(type3,invBlackImage3,type3);
+	//Fibras tipo 3 (0, 1, 1)
+	bitwise_and(blackImage1, invBlackImage2, type3);
+	bitwise_and(type3,invBlackImage3,type3);
 
-	//namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo3", type3);
+	namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo3", type3);
 
+	Mat contornos1, contornos2, contornos3;
 
-	//channels[0] = type1;
-	//channels[1] = type2;
-	//channels[2] = type3;
+	contornos1 = getContourFromBinary(type1);
+	contornos2 = getContourFromBinary(type2);
+	contornos3 = getContourFromBinary(type3);
+
+	namedWindow( "contornos1",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "contornos1", contornos1);	
+	namedWindow( "contornos2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "contornos2", contornos2);	
+	namedWindow( "contornos3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "contornos3", contornos3);	
+
+	//channels[0] = contornos1;
+	//channels[1] = contornos2;
+	//channels[2] = contornos3;
 	//merge(channels, 3, channel);
 	//namedWindow( "combined",CV_WINDOW_NORMAL);// Create a window for display.
 	//imshow( "combined", channel);
