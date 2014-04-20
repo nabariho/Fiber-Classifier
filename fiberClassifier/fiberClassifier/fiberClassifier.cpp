@@ -31,8 +31,8 @@ using namespace std;
 
 int edgeThresh = 1;
 int lowThreshold = 0;
-int const max_lowThreshold = 500;
-int ratio = 3;
+int const max_lowThreshold = 100;
+int ratio = 10;
 int kernel_size = 3;
 char* window_name = "Edge Map";
 
@@ -80,15 +80,15 @@ Mat CannyThreshold(string file, int, void*)
 	blur( src_gray, detected_edges, Size(3,3) );
 	equalizeHist(detected_edges,detected_edges);
 
-  Canny( detected_edges, detected_edges, 0, 0*ratio, kernel_size );
+  Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size );
 
   /// Using Canny's output as a mask, we display our result
   dst = Scalar::all(0);
   src.copyTo( dst, detected_edges);
-  src.copyTo(inv, detected_edges);
-  blur(inv,inv, Size(3,3));
-  bitwise_not(inv,inv);
-  return inv;
+  //src.copyTo(inv, detected_edges);
+  //blur(inv,inv, Size(3,3));
+  //bitwise_not(inv,inv);
+  return dst;
  }
 
 
@@ -110,66 +110,75 @@ int _tmain(int argc, _TCHAR* argv[])
 	Mat channels[3],channel;
 	
 	Mat blackImage1, blackImage2,blackImage3;
-
+	
+	lowThreshold = 25;
 	blackImage1 = CannyThreshold(file1, 0, 0);
+	lowThreshold = 25;
 	blackImage2 = CannyThreshold(file2, 0, 0);
+	lowThreshold = 50;
 	blackImage3 = CannyThreshold(file3, 0, 0);
 
-	threshold( blackImage1, blackImage1, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
-	threshold( blackImage2, blackImage2, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
-	threshold( blackImage3, blackImage3, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
+	namedWindow( "negras1",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "negras1", blackImage1);
+	namedWindow( "negras2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "negras2", blackImage2);
+	namedWindow( "negras3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "negras3", blackImage3);
+	//threshold( blackImage1, blackImage1, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
+	//threshold( blackImage2, blackImage2, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
+	//threshold( blackImage3, blackImage3, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
 
 
 
-	Mat invBlackImage1, invBlackImage2, invBlackImage3;
-	Mat type1, type2, type3;
+	//Mat invBlackImage1, invBlackImage2, invBlackImage3;
+	//Mat type1, type2, type3;
 
-	bitwise_not(blackImage1,invBlackImage1);
-	bitwise_not(blackImage2,invBlackImage2);
-	bitwise_not(blackImage3,invBlackImage3);
+	//bitwise_not(blackImage1,invBlackImage1);
+	//bitwise_not(blackImage2,invBlackImage2);
+	//bitwise_not(blackImage3,invBlackImage3);
 
-	namedWindow( "Negras1",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Negras1", blackImage1);	
-	namedWindow( "Negras2",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Negras2", blackImage2);	
-	namedWindow( "Negras3",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Negras3", blackImage3);	
+	//namedWindow( "Negras1",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "Negras1", blackImage1);	
+	//namedWindow( "Negras2",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "Negras2", blackImage2);	
+	//namedWindow( "Negras3",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "Negras3", blackImage3);	
 
 
 
-	//Fibras tipo 1 (1, 1, 0)
-	bitwise_and(invBlackImage1,invBlackImage2,type1);
-	bitwise_and(blackImage3,type1,type1);
+	////Fibras tipo 1 (1, 1, 0)
+	//bitwise_and(invBlackImage1,invBlackImage2,type1);
+	//bitwise_and(blackImage3,type1,type1);
 
-	namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Tipo1", type1);
+	//namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "Tipo1", type1);
 
-	//Fibras tipo 2 (1, 0, 1)
-	bitwise_and(invBlackImage1, blackImage2, type2);
-	bitwise_and(type2, invBlackImage3, type2);
+	////Fibras tipo 2 (1, 0, 1)
+	//bitwise_and(invBlackImage1, blackImage2, type2);
+	//bitwise_and(type2, invBlackImage3, type2);
 
-	namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Tipo2", type2);
+	//namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "Tipo2", type2);
 
-	//Fibras tipo 3 (0, 1, 1)
-	bitwise_and(blackImage1, invBlackImage2, type3);
-	bitwise_and(type3,invBlackImage3,type3);
+	////Fibras tipo 3 (0, 1, 1)
+	//bitwise_and(blackImage1, invBlackImage2, type3);
+	//bitwise_and(type3,invBlackImage3,type3);
 
-	namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Tipo3", type3);
+	//namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "Tipo3", type3);
 
-	Mat contornos1, contornos2, contornos3;
+	//Mat contornos1, contornos2, contornos3;
 
-	contornos1 = getContourFromBinary(type1);
-	contornos2 = getContourFromBinary(type2);
-	contornos3 = getContourFromBinary(type3);
+	//contornos1 = getContourFromBinary(type1);
+	//contornos2 = getContourFromBinary(type2);
+	//contornos3 = getContourFromBinary(type3);
 
-	namedWindow( "contornos1",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "contornos1", contornos1);	
-	namedWindow( "contornos2",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "contornos2", contornos2);	
-	namedWindow( "contornos3",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "contornos3", contornos3);	
+	//namedWindow( "contornos1",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "contornos1", contornos1);	
+	//namedWindow( "contornos2",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "contornos2", contornos2);	
+	//namedWindow( "contornos3",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "contornos3", contornos3);	
 
 	//channels[0] = contornos1;
 	//channels[1] = contornos2;
