@@ -32,7 +32,7 @@ using namespace std;
 int edgeThresh = 1;
 int lowThreshold = 0;
 int const max_lowThreshold = 100;
-int ratio = 10;
+int ratio = 3;
 int kernel_size = 3;
 char* window_name = "Edge Map";
 
@@ -48,14 +48,15 @@ Mat getContourFromBinary(Mat canny_input)
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
 
-	Canny( canny_input, canny_output, 0, 0*3, 3 );
+	//Canny( canny_input, canny_output, 0, 0*3, 3 );
 
-	findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
-	Mat drawing = Mat::zeros(canny_output.size(), CV_8UC3 );
-
+	findContours(canny_input, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_KCOS, Point(0, 0) );
+	Mat drawing = Mat::zeros(canny_input.size(), CV_8UC3 );
+	vector<Point> approxShape;
 	for( int i = 0; i< contours.size(); i++ )
      {
-		drawContours( drawing, contours, i, 255, CV_FILLED, 8, hierarchy, 0, Point() );
+		 drawContours(drawing, contours, i, Scalar(255, 255, 255), CV_FILLED);   // fill BLUE
+
      }
 	return drawing;
 }
@@ -78,7 +79,7 @@ Mat CannyThreshold(string file, int, void*)
 	cvtColor( src, src_gray, CV_BGR2GRAY );
 
 	blur( src_gray, detected_edges, Size(3,3) );
-	equalizeHist(detected_edges,detected_edges);
+	//equalizeHist(detected_edges,detected_edges);
 
   Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size );
 
@@ -88,7 +89,7 @@ Mat CannyThreshold(string file, int, void*)
   //src.copyTo(inv, detected_edges);
   //blur(inv,inv, Size(3,3));
   //bitwise_not(inv,inv);
-  return dst;
+  return detected_edges;
  }
 
 
@@ -109,7 +110,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	//my_sample.align(); //Queda pendiente tratar el alineamiento
 	Mat channels[3],channel;
 	
-	Mat blackImage1, blackImage2,blackImage3;
+	Mat blackImage1, blackImage2,blackImage3, inv1, inv2, inv3, contour1, contour2, contour3;
 	
 	lowThreshold = 25;
 	blackImage1 = CannyThreshold(file1, 0, 0);
@@ -124,6 +125,32 @@ int _tmain(int argc, _TCHAR* argv[])
 	imshow( "negras2", blackImage2);
 	namedWindow( "negras3",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "negras3", blackImage3);
+
+	bitwise_not(blackImage1, inv1);
+	bitwise_not(blackImage2, inv2);
+	bitwise_not(blackImage3, inv3);
+	
+
+	namedWindow( "inv1",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "inv1", inv1);
+	namedWindow("inv2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "inv2", inv2);
+	namedWindow( "inv3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "inv3", inv3);
+
+	contour1 = getContourFromBinary(blackImage1);
+	contour2 = getContourFromBinary(blackImage2);
+	contour3 = getContourFromBinary(blackImage3);
+
+		
+	namedWindow( "contour1",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "contour1", contour1);
+	namedWindow("contour2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "contour2", contour2);
+	namedWindow( "contour3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "contour3", contour3);
+
+
 	//threshold( blackImage1, blackImage1, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
 	//threshold( blackImage2, blackImage2, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
 	//threshold( blackImage3, blackImage3, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
