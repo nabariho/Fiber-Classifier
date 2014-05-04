@@ -112,11 +112,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	Mat blackImage1, blackImage2,blackImage3, inv1, inv2, inv3, contour1, contour2, contour3;
 	
-	lowThreshold = 25;
+	lowThreshold = 60;
 	blackImage1 = CannyThreshold(file1, 0, 0);
-	lowThreshold = 25;
+	lowThreshold = 60;
 	blackImage2 = CannyThreshold(file2, 0, 0);
-	lowThreshold = 50;
+	lowThreshold = 100;
 	blackImage3 = CannyThreshold(file3, 0, 0);
 
 	namedWindow( "negras1",CV_WINDOW_NORMAL);// Create a window for display.
