@@ -34,13 +34,13 @@ int main( int argc, char** argv )
 	String file2 = "C:/Users/nabar/Documents/GitHub/Fiber-Classifier/fiberClassifier/images/4_50_1.tif";
 	String file3 = "C:/Users/nabar/Documents/GitHub/Fiber-Classifier/fiberClassifier/images/10_3_1.tif";
   /// Load an image
-  src = imread( file2, 1 );
+  src = imread( file3, 1 );
 
   /// Convert the image to Gray
   cvtColor( src, src_gray, CV_RGB2GRAY );
   equalizeHist(src_gray,src_gray);
   /// Create a window to display results
-  namedWindow( window_name, CV_WINDOW_AUTOSIZE );
+  namedWindow( window_name, CV_WINDOW_NORMAL );
 
   /// Create Trackbar to choose type of Threshold
   createTrackbar( trackbar_type,

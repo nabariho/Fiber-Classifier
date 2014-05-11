@@ -12,7 +12,7 @@
 
 #define BLACK_THRESHOLD_IMAGE1 26
 #define	BLACK_THRESHOLD_IMAGE2 30
-#define BLACK_THRESHOLD_IMAGE3 50
+#define BLACK_THRESHOLD_IMAGE3 35
 
 // Implement mouse callback
 
