@@ -107,7 +107,7 @@ Mat CannyThreshold(string file, int, void*)
   return detected_edges;
  }
 
-void Threshold_Demo( string file, int threshold_value, void* )
+Mat Threshold( string file, int threshold_value, void* )
 {
   /* 0: Binary
      1: Binary Inverted
@@ -120,11 +120,11 @@ void Threshold_Demo( string file, int threshold_value, void* )
     src = imread(file);
 	cvtColor( src, src_gray, CV_RGB2GRAY );
     equalizeHist(src_gray,src_gray);
-     dst.create( src.size(), src.type() );
+    dst.create( src.size(), src.type() );
 
-	 threshold( src_gray, dst, threshold_value, 255,BINARY_THRESHOLD);
+	threshold( src_gray, dst, threshold_value, 255,INV_BINARY_THRESHOLD);
 
-  imshow( window_name, dst );
+	return dst;
 }
 
 
@@ -149,11 +149,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	Mat blackImage1, blackImage2,blackImage3, inv1, inv2, inv3, contour1, contour2, contour3;
 	
 	lowThreshold = 60;
-	blackImage1 = CannyThreshold(file1, 0, 0);
+	blackImage1 = Threshold(file1, BLACK_THRESHOLD_IMAGE1, 0);
 	lowThreshold = 60;
-	blackImage2 = CannyThreshold(file2, 0, 0);
+	blackImage2 = Threshold(file2, BLACK_THRESHOLD_IMAGE2, 0);
 	lowThreshold = 100;
-	blackImage3 = CannyThreshold(file3, 0, 0);
+	blackImage3 = Threshold(file3, BLACK_THRESHOLD_IMAGE3, 0);
 
 	namedWindow( "negras1",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "negras1", blackImage1);
@@ -161,10 +161,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	imshow( "negras2", blackImage2);
 	namedWindow( "negras3",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "negras3", blackImage3);
-
-
-	
-
 
 
 	contour1 = getContourFromBinary(blackImage1);
@@ -178,55 +174,49 @@ int _tmain(int argc, _TCHAR* argv[])
 	namedWindow( "contour3",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "contour3", contour3);
 
-	bitwise_not(contour1, inv1);
-	bitwise_not(contour2, inv2);
-	bitwise_not(contour3, inv3);
+	//bitwise_not(contour1, inv1);
+	//bitwise_not(contour2, inv2);
+	//bitwise_not(contour3, inv3);
 
-	namedWindow( "inv1",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "inv1", inv1);
-	namedWindow("inv2",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "inv2", inv2);
-	namedWindow( "inv3",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "inv3", inv3);
+	//namedWindow( "inv1",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "inv1", inv1);
+	//namedWindow("inv2",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "inv2", inv2);
+	//namedWindow( "inv3",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "inv3", inv3);
 
 
-	
-	//threshold( blackImage1, blackImage1, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
-	//threshold( blackImage2, blackImage2, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
-	//threshold( blackImage3, blackImage3, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
+	//
+	//Mat type1, type2, type3;
 
 
 
-	Mat type1, type2, type3;
+	////Fibras tipo 1 (1, 1, 0)
+	//bitwise_and(contour1,contour2,type1);
+	//bitwise_and(inv3,type1,type1);
+
+	//namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "Tipo1", type1);
+
+	////Fibras tipo 2 (1, 0, 1)
+	//bitwise_and(contour1, inv2, type2);
+	//bitwise_and(type2, contour3, type2);
+
+	//namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "Tipo2", type2);
+
+	////Fibras tipo 3 (0, 1, 1)
+	//bitwise_and(inv1, contour2, type3);
+	//bitwise_and(type3,contour3,type3);
+
+	//namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "Tipo3", type3);
 
 
-
-	//Fibras tipo 1 (1, 1, 0)
-	bitwise_and(contour1,contour2,type1);
-	bitwise_and(inv3,type1,type1);
-
-	namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Tipo1", type1);
-
-	//Fibras tipo 2 (1, 0, 1)
-	bitwise_and(contour1, inv2, type2);
-	bitwise_and(type2, contour3, type2);
-
-	namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Tipo2", type2);
-
-	//Fibras tipo 3 (0, 1, 1)
-	bitwise_and(inv1, contour2, type3);
-	bitwise_and(type3,contour3,type3);
-
-	namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "Tipo3", type3);
-
-
-	bitwise_and(type1,type2,channel);
-	bitwise_and(type3,channel,channel);
-	namedWindow( "combined",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "combined", channel);
+	//bitwise_and(type1,type2,channel);
+	//bitwise_and(type3,channel,channel);
+	//namedWindow( "combined",CV_WINDOW_NORMAL);// Create a window for display.
+	//imshow( "combined", channel);
 
     waitKey();
     return 0;
