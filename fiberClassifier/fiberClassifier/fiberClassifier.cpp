@@ -107,6 +107,28 @@ Mat CannyThreshold(string file, int, void*)
   return detected_edges;
  }
 
+void Threshold_Demo( string file, int threshold_value, void* )
+{
+  /* 0: Binary
+     1: Binary Inverted
+     2: Threshold Truncated
+     3: Threshold to Zero
+     4: Threshold to Zero Inverted
+   */
+
+	Mat src,src_gray;
+    src = imread(file);
+
+     Mat dst, detected_edges, inv;
+     dst.create( src.size(), src.type() );
+     inv.create( src.size(), src.type() );
+
+	 threshold( src_gray, dst, threshold_value, 255,BINARY_THRESHOLD);
+
+  imshow( window_name, dst );
+}
+
+
 
 
 int _tmain(int argc, _TCHAR* argv[])
