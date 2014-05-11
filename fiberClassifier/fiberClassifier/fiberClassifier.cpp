@@ -174,49 +174,49 @@ int _tmain(int argc, _TCHAR* argv[])
 	namedWindow( "contour3",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "contour3", contour3);
 
-	//bitwise_not(contour1, inv1);
-	//bitwise_not(contour2, inv2);
-	//bitwise_not(contour3, inv3);
+	bitwise_not(contour1, inv1);
+	bitwise_not(contour2, inv2);
+	bitwise_not(contour3, inv3);
 
-	//namedWindow( "inv1",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "inv1", inv1);
-	//namedWindow("inv2",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "inv2", inv2);
-	//namedWindow( "inv3",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "inv3", inv3);
-
-
-	//
-	//Mat type1, type2, type3;
+	namedWindow( "inv1",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "inv1", inv1);
+	namedWindow("inv2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "inv2", inv2);
+	namedWindow( "inv3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "inv3", inv3);
 
 
-
-	////Fibras tipo 1 (1, 1, 0)
-	//bitwise_and(contour1,contour2,type1);
-	//bitwise_and(inv3,type1,type1);
-
-	//namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo1", type1);
-
-	////Fibras tipo 2 (1, 0, 1)
-	//bitwise_and(contour1, inv2, type2);
-	//bitwise_and(type2, contour3, type2);
-
-	//namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo2", type2);
-
-	////Fibras tipo 3 (0, 1, 1)
-	//bitwise_and(inv1, contour2, type3);
-	//bitwise_and(type3,contour3,type3);
-
-	//namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo3", type3);
+	
+	Mat type1, type2, type3;
 
 
-	//bitwise_and(type1,type2,channel);
-	//bitwise_and(type3,channel,channel);
-	//namedWindow( "combined",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "combined", channel);
+
+	//Fibras tipo 1 (1, 1, 0)
+	bitwise_and(contour1,contour2,type1);
+	bitwise_and(inv3,type1,type1);
+
+	namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo1", type1);
+
+	//Fibras tipo 2 (1, 0, 1)
+	bitwise_and(contour1, inv2, type2);
+	bitwise_and(type2, contour3, type2);
+
+	namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo2", type2);
+
+	//Fibras tipo 3 (0, 1, 1)
+	bitwise_and(inv1, contour2, type3);
+	bitwise_and(type3,contour3,type3);
+
+	namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo3", type3);
+
+
+	bitwise_and(type1,type2,channel);
+	bitwise_and(type3,channel,channel);
+	namedWindow( "combined",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "combined", channel);
 
     waitKey();
     return 0;
