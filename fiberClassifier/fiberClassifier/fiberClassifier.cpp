@@ -37,7 +37,6 @@ int kernel_size = 3;
 char* window_name = "Edge Map";
 
 
-
 Mat getContourFromBinary(Mat canny_input)
 {
 
@@ -45,7 +44,7 @@ Mat getContourFromBinary(Mat canny_input)
 
 	/// Convert image to gray and blur it
 
-	vector<vector<Point> > contours;
+	vector<vector<Point>> contours;
 	vector<Vec4i> hierarchy;
 
 	//Canny( canny_input, canny_output, 0, 0*3, 3 );
@@ -53,10 +52,26 @@ Mat getContourFromBinary(Mat canny_input)
 	findContours(canny_input, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_KCOS, Point(0, 0) );
 	Mat drawing = Mat::zeros(canny_input.size(), CV_8UC3 );
 	vector<Point> approxShape;
+	vector<Moments> ContArea(contours.size());
+
+    for( int i = 0; i < contours.size(); i++ )
+    {  
+        ContArea[i] = moments(contours[i], false);
+    }
+
+	   /// Find the convex hull object for each contour
+   vector<vector<Point> >hull( contours.size() );
+   for( int i = 0; i < contours.size(); i++ )
+    {  
+		  convexHull( Mat(contours[i]), hull[i], false ); 
+   }
+
+	RNG rng(12345);
 	for( int i = 0; i< contours.size(); i++ )
      {
-		 drawContours(drawing, contours, i, Scalar(255, 255, 255), CV_FILLED);   // fill BLUE
-
+		Scalar color = Scalar(255, 255, 255);
+		drawContours(drawing, contours, i, color, CV_FILLED);   // fill BLUE
+		drawContours( drawing, hull, i, color, CV_FILLED, 8, vector<Vec4i>(), 0, Point() );
      }
 	return drawing;
 }
@@ -126,10 +141,25 @@ int _tmain(int argc, _TCHAR* argv[])
 	namedWindow( "negras3",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "negras3", blackImage3);
 
-	bitwise_not(blackImage1, inv1);
-	bitwise_not(blackImage2, inv2);
-	bitwise_not(blackImage3, inv3);
+
 	
+
+
+
+	contour1 = getContourFromBinary(blackImage1);
+	contour2 = getContourFromBinary(blackImage2);
+	contour3 = getContourFromBinary(blackImage3);
+
+	namedWindow( "contour1",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "contour1", contour1);
+	namedWindow("contour2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "contour2", contour2);
+	namedWindow( "contour3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "contour3", contour3);
+
+	bitwise_not(contour1, inv1);
+	bitwise_not(contour2, inv2);
+	bitwise_not(contour3, inv3);
 
 	namedWindow( "inv1",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "inv1", inv1);
@@ -138,81 +168,44 @@ int _tmain(int argc, _TCHAR* argv[])
 	namedWindow( "inv3",CV_WINDOW_NORMAL);// Create a window for display.
 	imshow( "inv3", inv3);
 
-	contour1 = getContourFromBinary(blackImage1);
-	contour2 = getContourFromBinary(blackImage2);
-	contour3 = getContourFromBinary(blackImage3);
 
-		
-	namedWindow( "contour1",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "contour1", contour1);
-	namedWindow("contour2",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "contour2", contour2);
-	namedWindow( "contour3",CV_WINDOW_NORMAL);// Create a window for display.
-	imshow( "contour3", contour3);
-
-
+	
 	//threshold( blackImage1, blackImage1, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
 	//threshold( blackImage2, blackImage2, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
 	//threshold( blackImage3, blackImage3, 80, MAX_BINARY_VALUE,BINARY_THRESHOLD );
 
 
 
-	//Mat invBlackImage1, invBlackImage2, invBlackImage3;
-	//Mat type1, type2, type3;
-
-	//bitwise_not(blackImage1,invBlackImage1);
-	//bitwise_not(blackImage2,invBlackImage2);
-	//bitwise_not(blackImage3,invBlackImage3);
-
-	//namedWindow( "Negras1",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Negras1", blackImage1);	
-	//namedWindow( "Negras2",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Negras2", blackImage2);	
-	//namedWindow( "Negras3",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Negras3", blackImage3);	
+	Mat type1, type2, type3;
 
 
 
-	////Fibras tipo 1 (1, 1, 0)
-	//bitwise_and(invBlackImage1,invBlackImage2,type1);
-	//bitwise_and(blackImage3,type1,type1);
+	//Fibras tipo 1 (1, 1, 0)
+	bitwise_and(contour1,contour2,type1);
+	bitwise_and(inv3,type1,type1);
 
-	//namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo1", type1);
+	namedWindow( "Tipo1",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo1", type1);
 
-	////Fibras tipo 2 (1, 0, 1)
-	//bitwise_and(invBlackImage1, blackImage2, type2);
-	//bitwise_and(type2, invBlackImage3, type2);
+	//Fibras tipo 2 (1, 0, 1)
+	bitwise_and(contour1, inv2, type2);
+	bitwise_and(type2, contour3, type2);
 
-	//namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo2", type2);
+	namedWindow( "Tipo2",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo2", type2);
 
-	////Fibras tipo 3 (0, 1, 1)
-	//bitwise_and(blackImage1, invBlackImage2, type3);
-	//bitwise_and(type3,invBlackImage3,type3);
+	//Fibras tipo 3 (0, 1, 1)
+	bitwise_and(inv1, contour2, type3);
+	bitwise_and(type3,contour3,type3);
 
-	//namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "Tipo3", type3);
+	namedWindow( "Tipo3",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "Tipo3", type3);
 
-	//Mat contornos1, contornos2, contornos3;
 
-	//contornos1 = getContourFromBinary(type1);
-	//contornos2 = getContourFromBinary(type2);
-	//contornos3 = getContourFromBinary(type3);
-
-	//namedWindow( "contornos1",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "contornos1", contornos1);	
-	//namedWindow( "contornos2",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "contornos2", contornos2);	
-	//namedWindow( "contornos3",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "contornos3", contornos3);	
-
-	//channels[0] = contornos1;
-	//channels[1] = contornos2;
-	//channels[2] = contornos3;
-	//merge(channels, 3, channel);
-	//namedWindow( "combined",CV_WINDOW_NORMAL);// Create a window for display.
-	//imshow( "combined", channel);
+	bitwise_and(type1,type2,channel);
+	bitwise_and(type3,channel,channel);
+	namedWindow( "combined",CV_WINDOW_NORMAL);// Create a window for display.
+	imshow( "combined", channel);
 
     waitKey();
     return 0;
