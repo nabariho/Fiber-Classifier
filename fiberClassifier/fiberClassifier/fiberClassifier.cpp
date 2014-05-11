@@ -115,13 +115,12 @@ void Threshold_Demo( string file, int threshold_value, void* )
      3: Threshold to Zero
      4: Threshold to Zero Inverted
    */
-
+	Mat dst, detected_edges, inv;
 	Mat src,src_gray;
     src = imread(file);
-
-     Mat dst, detected_edges, inv;
+	cvtColor( src, src_gray, CV_RGB2GRAY );
+    equalizeHist(src_gray,src_gray);
      dst.create( src.size(), src.type() );
-     inv.create( src.size(), src.type() );
 
 	 threshold( src_gray, dst, threshold_value, 255,BINARY_THRESHOLD);
 
