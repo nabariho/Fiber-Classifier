@@ -20,7 +20,7 @@ Image::Image(String file_path, int threshold)
 
 	cvtColor(opencv_mat,opencv_mat,CV_BGR2GRAY);
 	//reduce noise
-	blur(opencv_mat,opencv_mat,Size(3,3));
+	//blur(opencv_mat,opencv_mat,Size(3,3));
 	equalizeHist(opencv_mat,opencv_mat);
 
   }catch(const char* msg){
